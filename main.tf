@@ -3,7 +3,7 @@ data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
 locals {
-  create = var.create && var.putin_khuylo
+  create = var.create
 
   archive_filename        = try(data.external.archive_prepare[0].result.filename, null)
   archive_filename_string = local.archive_filename != null ? local.archive_filename : ""
@@ -167,6 +167,12 @@ resource "aws_lambda_function" "this" {
     aws_iam_role_policy_attachment.additional_many,
     aws_iam_role_policy_attachment.additional_one,
   ]
+
+  lifecycle {
+    ignore_changes = [
+      image_uri
+    ]
+  }
 }
 
 resource "aws_lambda_layer_version" "this" {
