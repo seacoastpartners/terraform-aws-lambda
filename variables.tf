@@ -40,6 +40,12 @@ variable "create_sam_metadata" {
   default     = false
 }
 
+variable "region" {
+  description = "Region where the resource(s) will be managed. Defaults to the region set in the provider configuration"
+  type        = string
+  default     = null
+}
+
 ###########
 # Function
 ###########
@@ -170,10 +176,22 @@ variable "vpc_security_group_ids" {
   default     = null
 }
 
+variable "ipv6_allowed_for_dual_stack" {
+  description = "Allows outbound IPv6 traffic on VPC functions that are connected to dual-stack subnets"
+  type        = bool
+  default     = null
+}
+
 variable "tags" {
   description = "A map of tags to assign to resources."
   type        = map(string)
   default     = {}
+}
+
+variable "include_default_tag" {
+  description = "Set to false to not include the default tag in the tags map."
+  type        = bool
+  default     = true
 }
 
 variable "function_tags" {
@@ -566,12 +584,6 @@ variable "attach_policies" {
   default     = false
 }
 
-variable "policy_path" {
-  description = "Path of policies to that should be added to IAM role for Lambda Function"
-  type        = string
-  default     = null
-}
-
 variable "number_of_policy_jsons" {
   description = "Number of policies JSON to attach to IAM role for Lambda Function"
   type        = number
@@ -786,6 +798,12 @@ variable "trigger_on_package_timestamp" {
   default     = true
 }
 
+variable "quiet_archive_local_exec" {
+  description = "Whether to disable archive local execution output"
+  type        = bool
+  default     = true
+}
+
 ############################################
 # Lambda Advanced Logging Settings
 ############################################
@@ -810,6 +828,16 @@ variable "logging_system_log_level" {
 
 variable "logging_log_group" {
   description = "The CloudWatch log group to send logs to."
+  type        = string
+  default     = null
+}
+
+############################################
+# Lambda Recursive Loop Settings
+############################################
+
+variable "recursive_loop" {
+  description = "Lambda function recursion configuration. Valid values are Allow or Terminate."
   type        = string
   default     = null
 }
